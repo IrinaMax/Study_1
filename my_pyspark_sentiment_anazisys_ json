@@ -1,6 +1,6 @@
 @author Irina Mahmudjanova Nov 2019
   
-# this is my priv work for email analysis for *** company
+# this is my private contribution for email sentiment analysis of customer support for *** company
 # perfirming sentiment analysis on pyspark with striaming json parquet file 
 # 1. extracting text form json file
 # 2. cleaning text on pyspark from variety of simbols 
