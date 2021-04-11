@@ -1,0 +1,560 @@
+Skip to content
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@IrinaMax 
+IrinaMax
+/
+My_new_code
+Private
+1
+00
+Code
+Issues
+Pull requests
+Actions
+Projects
+Security
+Insights
+Settings
+My_new_code/my_code_python_sentiment_analysis
+@IrinaMax
+IrinaMax Update my_code_python_sentiment_analysis
+Latest commit d607f56 19 hours ago
+ History
+ 1 contributor
+516 lines (403 sloc)  19.3 KB
+  
+# this is my priv work for email analysis for apple with vider analiser
+
+est_split
+from pyspark.sql.functions import udf
+
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk import tokenize
+import matplotlib.pyplot as plt
+
+%pyspark
+df14= spark.read.json("/user/csaemlp/csiq/datalake/CCTech/opus/INTERACTION/streaming/json/2018/12/04")
+data = df14.select(['STRATTRIBUTE10','SUBJECT','TYPEID','LANG','TEXT']).dropna()
+data_l = data.dropDuplicates()
+data_l = data_l.filter((data.TYPEID == 'Inbound'))
+data_l = data_l.filter(data_l.LANG=='en-us')
+data_l.write.mode('overwrite').save('/user/c5136398/data_input_1204.parquet’)
+
+%pyspark
+def _remove_name_entities_nltk(text):
+    text = text.encode('ascii', 'ignore').decode('ascii') 
+    entities = []
+    for sentence in sent_tokenize(text):
+        chunks = ne_chunk(pos_tag(word_tokenize(sentence)))
+        entities.extend([chunk for chunk in chunks if hasattr(chunk,'label')])
+    ent = set([v[0] for k in entities for v in k])
+    for w in ent:
+        text = text.replace(w,'')
+    return text
+    
+def safe_str(obj):
+    try: return str(obj)
+    except UnicodeEncodeError:
+        return obj.encode('ascii', 'ignore').decode('ascii')
+    
+_safe_str_ = udf(lambda text: safe_str(text), StringType())    
+    
+def f(text):
+    idx = text.find('From' )
+    if idx != -1:
+        return text[:idx]
+    else:
+        return text
+
+%pyspark
+keywords =['case','id','request type','< mailto : >' ,'phone','notes:','additional notes','call','(',')',':','...', 'image.jpg', '$','&', '<', '>', ':','``', '--', '~','%', '^', '#', 'Ext .', '[', ']', '[ image.jpg ] ', '|','+', '-' ]
+#stop_w = list(set(stopwords.words('english'))) + keywords
+#stemmer = SnowballStemmer('english')
+
+_cut_ = udf(lambda text: f(text), StringType())
+_safe_str_ = udf(lambda text: safe_str(text), StringType()) 
+_cut_ = udf(lambda text: f(text), StringType())  
+_reNum_ = udf(lambda text: re.sub(r'\d+', '' , text))
+_reTag_ = udf(lambda text: re.sub(r'\r\n', '', text))
+_remAfterFrom_ =udf(lambda text: re.sub(r'From:.*$', '', text))
+# _remP_M_ = udf(lambda text: re.sub(r' +', '', text))
+_remurl_ = udf(lambda text: re.sub(r'http\S+', '', text))
+_remmail_ = udf(lambda text: re.sub(r"@(\w+)", '', text))
+
+_remove_slash_ = udf(lambda text: text.replace('/',' '),StringType())
+_remove_stars_ = udf(lambda text: text.replace('*',' '),StringType())
+
+_remove_email_ =udf(lambda text: re.sub(r'\S*@\S*\s?', '', text), StringType())
+# _remove_email_ = udf(lambda text: re.sub(r'(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})', '', text),StringType()) 
+_remove_url_ = udf(lambda text: re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', '', text),StringType()) 
+
+_remove_names_nltk_ = udf(lambda text: _remove_name_entities_nltk(text),StringType())
+_remove_com_ = udf(lambda text: ' '.join([w for w in word_tokenize(text) if not '.com' in w]), StringType()) 
+_remove_names_nltk_ = udf(lambda text: _remove_name_entities_nltk(text),StringType())
+_remove_inside_brackets_ = udf(lambda text: re.sub("[\(\[].*?[\)\]]", "", text))
+
+#_lower_remove_stop_w_ = udf(lambda text: ' '.join([w.lower() for w in word_tokenize(text) if w.lower() not in stop_w]),StringType())
+_remove_numbers_ = udf(lambda text: re.sub(r'[0-9]+', '', text),StringType())
+
+#def count_freq(text):
+#    return Counter(text)
+# _remove_low_freq_ = udf(lambda text: ' '.join([w for w in word_tokenize(text) if dic[w] > 5]), StringType()) 
+_remove_stop_w_ = udf(lambda text: ' '.join([w for w in word_tokenize(text) if w not in keywords]),StringType())
+_remove_inside_brackets_ = udf(lambda text: re.sub("[\{\{}.*?[\)\]]", "", text) ,StringType())
+
+%pyspark
+
+def d_clean(df):
+     df = df.select(['STRATTRIBUTE10','SUBJECT','TYPEID','LANG','TEXT'])
+    
+    
+     df = df.withColumn('TEXT_NEW', _reNum_(df.TEXT))
+     df = df.withColumn('TEXT_NEW', _reTag_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remAfterFrom_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _cut_(df.TEXT_NEW))
+     
+     df = df.withColumn('TEXT_NEW', _remurl_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remmail_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _safe_str_(df.TEXT_NEW))
+ 
+     df = df.withColumn('TEXT_NEW', _remove_slash_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remove_stars_(df.TEXT_NEW))
+
+     df = df.withColumn('TEXT_NEW', _remove_email_(df.TEXT_NEW))
+    # df = df.withColumn('TEXT_NEW', _remove_email_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remove_url_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remove_names_nltk_(df.TEXT_NEW))
+    # df = df.withColumn('TEXT_NEW', _remove_stop_w_(df.TEXT_NEW))
+    # df = df.withColumn('TEXT_NEW', _lower_remove_stop_w_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remove_com_(df.TEXT_NEW))
+    # df = df.withColumn('TEXT_NEW', _stemming_snowball_(df.TEXT_NEW))
+    # df = df.withColumn('TEXT_NEW', _remove_low_freq_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remove_stop_w_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remove_inside_brackets_(df.TEXT_NEW))
+
+     return df
+     
+%pyspark
+data_cleaned = d_clean(data_l)
+data_cleaned.show(5)
+
+%pyspark
+# this paragraph was moved to the df function
+#keywords2 =['case','id','request type','< mailto : >' ,'phone','notes:','additional notes','call','(',')',':','...', 'image.jpg', '$','&', '<', '>', ':','``', '--', '~','%', '^', '#', 'Ext .', '[', ']', '[ image.jpg ] ', '|','+', '-' ]
+#stop_w = list(set(stopwords.words('english'))) + keywords
+#_remove_stop_w_ = udf(lambda text: ' '.join([w for w in word_tokenize(text) if w not in keywords2]),StringType())
+
+%pyspark
+#fdata_cleaned = data_cleaned.withColumn('TEXT_NEW', _remove_stop_w_(data_cleaned.TEXT_NEW))
+
+for row in data_cleaned.select(['TEXT_NEW']).rdd.flatMap(lambda s:s).take(1000):
+    print(row)
+    print('====================================‘)
+
+%pyspark
+#this parag was also icluded to the udf
+#_remove_inside_brackets_ = udf(lambda text: re.sub("[\{\{}.*?[\)\]]", "", text) ,StringType())
+
+#final_data = fdata_cleaned.withColumn('TEXT_NEW', _remove_inside_brackets_(fdata_cleaned.TEXT_NEW))
+
+
+%pyspark
+#final_data.write.mode('overwrite').save('/user/c5136398/fdata_cleaned1204.parquet')
+data_cleaned.write.mode('overwrite').save('/user/c5136398/fdata_cleaned1204.parquet')
+
+%pyspark
+data_cleaned = spark.read.load('/user/c5136398/fdata_cleaned1204.parquet’)
+
+%pyspark
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk import tokenize
+sid = SentimentIntensityAnalyzer()
+
+%pyspark
+dfp =  data_cleaned.toPandas()
+#dfp['TEXT_NEW'][:10]
+
+%pyspark
+sid = SentimentIntensityAnalyzer()
+
+messages = dfp['TEXT_NEW']   #the input have to be clean colomn of TEXT file of json
+
+for m in messages:
+    vs = sid.polarity_scores(m)
+    print("{:-<70} {}".format(m, str(vs)))
+
+
+%pyspark
+#from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk import tokenize
+
+analyzer = SentimentIntensityAnalyzer()
+data_all = dfp['TEXT_NEW']
+
+messages = []
+vs_compound = []
+vs_pos = []
+vs_neu = []
+vs_neg = []
+
+for i in range(0, len(data_all)):
+    messages.append(data_all[i])
+    vs_compound.append(analyzer.polarity_scores(data_all[i])['compound'])
+    vs_pos.append(analyzer.polarity_scores(data_all[i])['pos'])
+    vs_neu.append(analyzer.polarity_scores(data_all[i])['neu'])
+    vs_neg.append(analyzer.polarity_scores(data_all[i])['neg’])
+
+%pyspark
+from pandas import Series, DataFrame
+
+dfsa = DataFrame({'Messages': messages,
+                        'Compound': vs_compound,
+                        'Positive': vs_pos,
+                        'Neutral': vs_neu,
+                        'Negative': vs_neg})
+dfsa = dfsa[['Messages', 'Compound', 'Positive', 'Neutral', 'Negative']]
+
+# Have a look at the top 5 results.
+dfsa.head()
+
+%pyspark
+## summarizing all polarity scores 
+sid = SentimentIntensityAnalyzer()
+summary = {"positive":0,"neutral":0,"negative":0, "compound":0 }
+
+messages = dfp['TEXT_NEW']
+
+for x in messages: 
+    ss = sid.polarity_scores(x)
+    if ss["compound"] == 0.0: 
+        summary["neutral"] +=1
+    elif ss["compound"] > 0.0:
+        summary["positive"] +=1
+    
+    else:
+        summary["negative"] +=1
+print(summary)
+
+%pyspark
+#dfsa[['Messages','Compound','Negative']][dfsa['Negative']>0.2]
+
+%pyspark
+spark.createDataFrame(dfsa).show()
+dfsa_labled =spark.createDataFrame(dfsa)
+
+%pyspark
+dfsa_labled.write.mode('overwrite').save('/user/c5136398/sa_result_1204.parquet’)
+
+%pyspark
+import matplotlib.pyplot as plt
+plt.figure()
+dfsa[['Compound','Positive', 'Neutral','Negative']].iloc[:50].plot.bar(); plt.axhline(0, color='k')
+
+
+%pyspark
+plt.figure()
+dfsa[['Compound','Positive', 'Neutral','Negative']].loc[:4].style.background_gradient(cmap='viridis’)
+
+%pyspark
+dfsa.style.set_caption('Colormaps, with a caption.')\
+    .background_gradient(cmap=cm)
+
+%pyspark
+import pyspark.sql.functions as f
+# low frequency words at spark
+final_list_of_words_path = "/user/c5136398"
+words = data_cleaned.withColumn('words', f.explode(f.split(f.col('TEXT_NEW'), ' '))).select('words')
+
+list_of_words = words.rdd.flatMap(lambda x:x).collect()
+dict_of_words = Counter(list_of_words)
+
+    
+final_list = [k.strip() for k,v in dict_of_words.items() if v > 5]
+#final list is saved as a soark dataframe because we want to save it on cluster    
+df_dict = spark.createDataFrame([final_list],StringType())
+df_dict.write.mode('overwrite').save(final_list_of_words_path)
+
+#test phase    
+df_dict = spark.read.load(final_list_of_words_path)
+final_list_of_words = df_dict.rdd.flatMap(lambda s:s).collect()[0].split(',')
+final_list_of_words = [w.strip() for w in final_list_of_words]
+
+_remove_low_freq_ = udf(lambda text:' '.join([w for w in text.split(' ') if w in final_list_of_words ]), StringType()) 
+
+
+##Data Processing with regular expression
+def _remove_name_entities_nltk(text):
+    text = text.encode('ascii', 'ignore').decode('ascii') 
+    entities = []
+    for sentence in sent_tokenize(text):
+        chunks = ne_chunk(pos_tag(word_tokenize(sentence)))
+        entities.extend([chunk for chunk in chunks if hasattr(chunk,'label')])
+    ent = set([v[0] for k in entities for v in k])
+    for w in ent:
+        text = text.replace(w,'')
+    return text
+    
+def safe_str(obj):
+    try: return str(obj)
+    except UnicodeEncodeError:
+        return obj.encode('ascii', 'ignore').decode('ascii')
+    
+   
+    
+def f(text):
+    idx = text.find('From' )
+    if idx != -1:
+        return text[:idx]
+    else:
+        return text
+    
+
+from pyspark.sql.functions import udf
+_safe_str_ = udf(lambda text: safe_str(text), StringType()) 
+_cut_ = udf(lambda text: f(text), StringType())  
+_reNum_ = udf(lambda text: re.sub(r'\d+', '' , text))
+_reTag_ = udf(lambda text: re.sub(r'\r\n', '', text))
+_remAfterFrom_ =udf(lambda text: re.sub(r'From:.*$', '', text))
+#_remP_M_ = udf(lambda text: re.sub(r' +', '', text))
+_remurl_ = udf(lambda text: re.sub(r'http\S+', '', text))
+_remmail_ = udf(lambda text: re.sub(r"@(\w+)", '', text))
+
+_remove_slash_ = udf(lambda text: text.replace('/',' '),StringType())
+_remove_email_ =udf(lambda text: re.sub(r'\S*@\S*\s?', '', text), StringType())
+#_remove_email_ = udf(lambda text: re.sub(r'(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})', '', text),StringType()) 
+_remove_url_ = udf(lambda text: re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', '', text),StringType()) 
+_remove_com_ = udf(lambda text: ' '.join([w for w in word_tokenize(text) if not '.com' in w]), StringType()) 
+_remove_names_nltk_ = udf(lambda text: _remove_name_entities_nltk(text),StringType())
+_remove_inside_brackets_ = udf(lambda text: re.sub("[\(\[].*?[\)\]]", "", text))
+
+#_lower_remove_stop_w_ = udf(lambda text: ' '.join([w.lower() for w in word_tokenize(text) if w.lower() not in stop_w]),StringType())
+_remove_numbers_ = udf(lambda text: re.sub(r'[0-9]+', '', text),StringType())
+
+#_trim_ = udf(lambda text:    )
+#_remH_ = udf(lambda text: text.replace('-',' '),StringType())
+#_remurl_ =udf(lambda text: re.sub(r'http\S+', '', text), StringType())
+#_remcom_ =udf(lambda text: re.sub(r"@(\w+)", '', text), StringType())
+#_remmail_ =udf(lambda text: re.sub(r"@(\w+)", '', text), StringType())
+#_remsp_ =udf(lambda text:  re.sub(r'[^\w\s]', '', text), StringType())
+#_remUpCase_ =udf(lambda text: text.strip().lower(), StringType())
+#_remAfterFrom_ =udf(lambda text: re.sub(r"from.*$", "", text)), StringType())
+
+#_remove_names_nltk = udf(lambda text: _remove_name_entities_nltk(text),StringType())
+#_remove_names_spacy = udf(lambda text: _remove_name_entities_spacy(text),StringType())
+
+%pyspark
+
+def d_clean(df):
+     df = df.select(['STRATTRIBUTE10','SUBJECT','TYPEID','LANG','TEXT'])
+    
+    
+     df = df.withColumn('TEXT_NEW', _reNum_(df.TEXT))
+     df = df.withColumn('TEXT_NEW', _reTag_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remAfterFrom_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _cut_(df.TEXT_NEW))
+     
+     df = df.withColumn('TEXT_NEW', _remurl_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remmail_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _safe_str_(df.TEXT_NEW))
+ 
+     df = df.withColumn('TEXT_NEW', _remove_slash_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remove_stars_(df.TEXT_NEW))
+
+     df = df.withColumn('TEXT_NEW', _remove_email_(df.TEXT_NEW))
+    # df = df.withColumn('TEXT_NEW', _remove_email_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remove_url_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remove_names_nltk_(df.TEXT_NEW))
+    # df = df.withColumn('TEXT_NEW', _remove_stop_w_(df.TEXT_NEW))
+    # df = df.withColumn('TEXT_NEW', _lower_remove_stop_w_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remove_com_(df.TEXT_NEW))
+    # df = df.withColumn('TEXT_NEW', _stemming_snowball_(df.TEXT_NEW))
+    # df = df.withColumn('TEXT_NEW', _remove_low_freq_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remove_stop_w_(df.TEXT_NEW))
+     df = df.withColumn('TEXT_NEW', _remove_inside_brackets_(df.TEXT_NEW))
+
+     return df
+     
+%pyspark
+data_cleaned = d_clean(data_l)
+data_cleaned.show(5)
+
+%pyspark
+# this paragraph was moved to the df function
+#keywords2 =['case','id','request type','< mailto : >' ,'phone','notes:','additional notes','call','(',')',':','...', 'image.jpg', '$','&', '<', '>', ':','``', '--', '~','%', '^', '#', 'Ext .', '[', ']', '[ image.jpg ] ', '|','+', '-' ]
+#stop_w = list(set(stopwords.words('english'))) + keywords
+#_remove_stop_w_ = udf(lambda text: ' '.join([w for w in word_tokenize(text) if w not in keywords2]),StringType())
+
+%pyspark
+#fdata_cleaned = data_cleaned.withColumn('TEXT_NEW', _remove_stop_w_(data_cleaned.TEXT_NEW))
+
+for row in data_cleaned.select(['TEXT_NEW']).rdd.flatMap(lambda s:s).take(1000):
+    print(row)
+    print('====================================‘)
+
+%pyspark
+#this parag was also icluded to the udf
+#_remove_inside_brackets_ = udf(lambda text: re.sub("[\{\{}.*?[\)\]]", "", text) ,StringType())
+
+#final_data = fdata_cleaned.withColumn('TEXT_NEW', _remove_inside_brackets_(fdata_cleaned.TEXT_NEW))
+
+%pyspark
+#final_data.write.mode('overwrite').save('/user/c5136398/fdata_cleaned1204.parquet')
+data_cleaned.write.mode('overwrite').save('/user/c5136398/fdata_cleaned1204.parquet')
+
+%pyspark
+data_cleaned = spark.read.load('/user/c5136398/fdata_cleaned1204.parquet’)
+
+%pyspark
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk import tokenize
+sid = SentimentIntensityAnalyzer()
+
+%pyspark
+dfp =  data_cleaned.toPandas()
+#dfp['TEXT_NEW'][:10]
+
+%pyspark
+sid = SentimentIntensityAnalyzer()
+
+messages = dfp['TEXT_NEW']   #the input have to be clean colomn of TEXT file of json
+
+for m in messages:
+    vs = sid.polarity_scores(m)
+    print("{:-<70} {}".format(m, str(vs)))
+
+%pyspark
+#from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk import tokenize
+
+analyzer = SentimentIntensityAnalyzer()
+data_all = dfp['TEXT_NEW']
+
+messages = []
+vs_compound = []
+vs_pos = []
+vs_neu = []
+vs_neg = []
+
+for i in range(0, len(data_all)):
+    messages.append(data_all[i])
+    vs_compound.append(analyzer.polarity_scores(data_all[i])['compound'])
+    vs_pos.append(analyzer.polarity_scores(data_all[i])['pos'])
+    vs_neu.append(analyzer.polarity_scores(data_all[i])['neu'])
+    vs_neg.append(analyzer.polarity_scores(data_all[i])['neg’])
+
+%pyspark
+from pandas import Series, DataFrame
+
+dfsa = DataFrame({'Messages': messages,
+                        'Compound': vs_compound,
+                        'Positive': vs_pos,
+                        'Neutral': vs_neu,
+                        'Negative': vs_neg})
+dfsa = dfsa[['Messages', 'Compound', 'Positive', 'Neutral', 'Negative']]
+
+# Have a look at the top 5 results.
+dfsa.head()
+0 decided to replace my with a new one Some oth... 0.7624 0.114 
+1 Thanks for reaching out to me I called T dire... -0.2382 0.100 
+2 I was able to solve the problem by setting up ... -0.2263 0.061 
+3 , I was never able to watch the movie I downlo... 0.1779 0.123 
+4 Thank You For Last Days Ag We Open A Developer... 0.4215 0.064 
+Neutral Negative 
+0 0.886 0.000 
+1 0.787 0.113 
+2 0.847 0.092 
+3 0.788 0.089 
+4 0.936 0.000
+
+%pyspark
+## summarizing all polarity scores 
+sid = SentimentIntensityAnalyzer()
+summary = {"positive":0,"neutral":0,"negative":0, "compound":0 }
+
+messages = dfp['TEXT_NEW']
+
+for x in messages: 
+    ss = sid.polarity_scores(x)
+    if ss["compound"] == 0.0: 
+        summary["neutral"] +=1
+    elif ss["compound"] > 0.0:
+        summary["positive"] +=1
+    
+    else:
+        summary["negative"] +=1
+print(summary)
+
+{'positive': 136, 'neutral': 55, 'negative': 36, 'compound': 0}
+%pyspark
+#dfsa[['Messages','Compound','Negative']][dfsa['Negative']>0.2]
+ 
+Messages Compound Negative
+50 Youve replied to the wrong person -0.4767 0.383
+65 Yes , I want to cancel my subscription 0.2500 0.222
+75 This doesnt help me because I dont have my ord... -0.6197 0.217
+124 No , my problem has not been resolved The pur... -0.8911 0.220
+201 I am sorry we are not accredited You can canc... -0.3182 0.268
+ 
+%pyspark
+spark.createDataFrame(dfsa).show()
+dfsa_labled =spark.createDataFrame(dfsa)
+ 
++--------------------+--------+--------+-------+--------+
+| Messages|Compound|Positive|Neutral|Negative|
++--------------------+--------+--------+-------+--------+
+|decided to replac...| 0.7624| 0.114| 0.886| 0.0|
+|Thanks for reachi...| -0.2382| 0.1| 0.787| 0.113|
+|I was able to sol...| -0.2263| 0.061| 0.847| 0.092|
+|, I was never abl...| 0.1779| 0.123| 0.788| 0.089|
+|Thank You For Las...| 0.4215| 0.064| 0.936| 0.0|
+|Thanks again for ...| 0.6808| 0.528| 0.472| 0.0|
+|, I left you a vo...| 0.5809| 0.153| 0.779| 0.068|
+|send me the docum...| -0.2081| 0.037| 0.892| 0.07|
+|I still can not p...| 0.0| 0.0| 1.0| 0.0|
+|Thank you for you...| 0.6696| 0.647| 0.353| 0.0|
+|Hi Tracie , you a...| 0.0| 0.056| 0.887| 0.056|
+|, This issue has ...| 0.763| 0.171| 0.699| 0.13|
+|, This is of emai...| 0.0| 0.0| 1.0| 0.0|
+|, FYI it looks li...| 0.7983| 0.3| 0.7| 0.0|
+|, you very much f...| 0.9841| 0.314| 0.686| 0.0|
+|Hi again , I will...| 0.7845| 0.152| 0.848| 0.0|
+|Hi Corinna , into...| -0.128| 0.092| 0.795| 0.113|
+|Hi , you so much ...| 0.8481| 0.146| 0.804| 0.05|
+| to you as well| 0.2732| 0.412| 0.588| 0.0|
+| | 0.0| 0.0| 0.0| 0.0|
++--------------------+--------+--------+-------+--------+
+only showing top 20 rows
+ 
+%pyspark
+dfsa_labled.write.mode('overwrite').save('/user/c5136398/sa_result_1204.parquet’)
+ 
+%pyspark
+import matplotlib.pyplot as plt
+plt.figure()
+dfsa[['Compound','Positive', 'Neutral','Negative']].iloc[:50].plot.bar(); plt.axhline(0, color='k')
+ 
+
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+Loading complete
