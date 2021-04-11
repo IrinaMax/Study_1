@@ -4,7 +4,7 @@
 # performing sentiment analysis on pyspark with streaming json parquet file 
 # 1. extracting text from json parquet file
 # 2. cleaning text on pyspark from variety of symbols 
-# 3. fitting Sentiment score using vider sentiment 
+# 3. fitting Sentiment score using vader sentiment 
 # 4. creating output table
 
 est_split
