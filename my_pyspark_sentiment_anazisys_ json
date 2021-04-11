@@ -2,7 +2,7 @@
   
 # this is my private contribution for email sentiment analysis of customer support for *** company
 # performing sentiment analysis on pyspark with streaming json parquet file 
-# 1. extracting text form json file
+# 1. extracting text from json parquet file
 # 2. cleaning text on pyspark from variety of simbols 
 # 3. fitting Sentiment score using vider sentiment 
 # 4. creating output table
