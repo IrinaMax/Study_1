@@ -5,7 +5,7 @@
 # 1. extracting text from json parquet file
 # 2. cleaning text on pyspark from variety of symbols 
 # 3. fitting Sentiment score using vader sentiment 
-# 4. creating output table
+# 4. creating output table as parquet file
 
 est_split
 from pyspark.sql.functions import udf
@@ -243,7 +243,8 @@ dfsa[['Compound','Positive', 'Neutral','Negative']].loc[:4].style.background_gra
 %pyspark
 dfsa.style.set_caption('Colormaps, with a caption.')\
     .background_gradient(cmap=cm)
-
+    
+#------------------------------------testing with sample on my hdfs folder---------------------------------------------
 %pyspark
 import pyspark.sql.functions as f
 # low frequency words at spark
@@ -521,16 +522,3 @@ plt.figure()
 dfsa[['Compound','Positive', 'Neutral','Negative']].iloc[:50].plot.bar(); plt.axhline(0, color='k')
  
 
-© 2021 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
-Loading complete
