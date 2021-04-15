@@ -428,7 +428,7 @@ for i in range(0, len(data_all)):
     vs_compound.append(analyzer.polarity_scores(data_all[i])['compound'])
     vs_pos.append(analyzer.polarity_scores(data_all[i])['pos'])
     vs_neu.append(analyzer.polarity_scores(data_all[i])['neu'])
-    vs_neg.append(analyzer.polarity_scores(data_all[i])['neg’])
+    vs_neg.append(analyzer.polarity_scores(data_all[i])['neg'])
 
 %pyspark
 from pandas import Series, DataFrame
