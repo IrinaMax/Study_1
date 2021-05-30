@@ -21,7 +21,7 @@
 
 # highligh 
       highlight(text, dict)
-![imageH1)(https://user-images.githubusercontent.com/16123495/120095553-777d4000-c0db-11eb-9cbb-60e1654aad5c.png)
+![imageH1)(<img width="622" alt="Screen Shot 2021-05-29 at 10 21 13 PM" src="https://user-images.githubusercontent.com/16123495/120095553-777d4000-c0db-11eb-9cbb-60e1654aad5c.png">)
 
       #text <- "Good old-fashioned buy-and-hold investing might not be exciting enough to interest day traders."
       text <-  "Good old-fashioned buy-and-hold investing might not be exciting enough to interest day traders. But it can nevertheless produce exciting longer-term       returns and beat out newfangled strategies."
