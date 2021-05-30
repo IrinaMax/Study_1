@@ -10,20 +10,22 @@
      text <- "I try to highlight some words in the sentence. I love data science, but this is definetely not a  data science procedure..."
 
 # 
-     #create function with  array of some specific words and colors we wanted to highlight it
-     df <- data.frame(feature = c("highlight some words", "data science","definetely", "procedure"),
+     #create function with  array of some specific words and colors we wanted to highlight in this sentence
+     df <- data.frame(
+       feature = c("highlight some words", "data science","definetely", "procedure"),
        bg_colour = c("pink", "yellow", "lightblue","lightgreen"),
        stringsAsFactors = FALSE
      )
 # 
-     convert df to dict
+     Convert df to dictionary with defined color palette
      dict <- as_dict(df)
 
 # highligh 
       highlight(text, dict)
 <img width="622" alt="Screen Shot 2021-05-29 at 10 21 13 PM" src="https://user-images.githubusercontent.com/16123495/120095553-777d4000-c0db-11eb-9cbb-60e1654aad5c.png">
 
-      #text <- "Good old-fashioned buy-and-hold investing might not be exciting enough to interest day traders."
+ Let's try to highlight some words based on the Sentiment score. 
+ 
       text <-  "Good old-fashioned buy-and-hold investing might not be exciting enough to interest day traders. But it can nevertheless produce exciting longer-term       returns and beat out newfangled strategies."
       tokens <-  data.frame(text) %>% unnest_tokens(word, text)
       tokens
