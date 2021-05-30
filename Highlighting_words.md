@@ -20,8 +20,8 @@
      dict <- as_dict(df)
 
 # highligh 
-highlight(text, dict)
-#-------------------------
+      highlight(text, dict)
+
       #text <- "Good old-fashioned buy-and-hold investing might not be exciting enough to interest day traders."
       text <-  "Good old-fashioned buy-and-hold investing might not be exciting enough to interest day traders. But it can nevertheless produce exciting longer-term       returns and beat out newfangled strategies."
       tokens <-  data.frame(text) %>% unnest_tokens(word, text)
