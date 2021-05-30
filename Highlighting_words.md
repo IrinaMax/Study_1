@@ -1,5 +1,4 @@
-#
- How we can highlight test 
+# How we can highlight some words in the test using library highlightr
  
      #devtools::install_github("JBGruber/highlightr")
      library(highlightr)
@@ -10,7 +9,7 @@
      text <- "I try to highlight some words in the sentence. I love data science, but this is definetely not a  data science procedure..."
 
 # 
-     #create function with  array of some specific words and colors we wanted to highlight in this sentence
+     #My idea is create array of some specific words and assign every word to the specific color we wanted to highlight in this sentence
      df <- data.frame(
        feature = c("highlight some words", "data science","definetely", "procedure"),
        bg_colour = c("pink", "yellow", "lightblue","lightgreen"),
