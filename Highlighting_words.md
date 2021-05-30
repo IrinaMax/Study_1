@@ -6,12 +6,12 @@
      library(syuzhet)
      library(stringr)
      library(tidytext)
-     text <- "I try to highlight some words in the sentence. I love data science, but this is definetely not a  data science procedure..."
+     text <- "I try to highlight some words in the sentence. I love data science, but this task applied mostly to UI skills than data science."
 
 # 
      #My idea is create array of some specific words and assign every word to the specific color we wanted to highlight in this sentence
      df <- data.frame(
-       feature = c("highlight some words", "data science","definetely", "procedure"),
+       feature = c("highlight some words", "data science","applied", "UI skills"),
        bg_colour = c("pink", "yellow", "lightblue","lightgreen"),
        stringsAsFactors = FALSE
      )
@@ -21,7 +21,6 @@
 
 # highligh 
       highlight(text, dict)
-<img width="622" alt="Screen Shot 2021-05-29 at 10 21 13 PM" src="https://user-images.githubusercontent.com/16123495/120095553-777d4000-c0db-11eb-9cbb-60e1654aad5c.png">
 
  Let's try to highlight some words based on the Sentiment score. 
  
