@@ -21,6 +21,8 @@
 
 # highligh 
       highlight(text, dict)
+      
+![Screen Shot 2021-05-30 at 3 59 18 PM](https://user-images.githubusercontent.com/16123495/120122896-98d43f80-c160-11eb-85cc-3f222bb3e02a.png)      
 
  Let's try to highlight some words based on the Sentiment score. 
  
