@@ -29,20 +29,20 @@ highlight(text, dict)
       af<- get_sentiments('afinn')
       af %>% summary
 
-#af<- get_sentiments('bing')
-#af %>% summary
-com_words <-tokens %>% inner_join(af)
-com_words
-df <- data.frame(
-  feature = com_words$word,
-  bg_colour = palette("default"),
-  stringsAsFactors = FALSE
-)
-df
-#dict <- data.frame(com_w$word, bg_colour = c("pink", "yellow"),stringsAsFactors = FALSE)
-dict1 <- as_dict(df)
-highlight(text,dict1)
+     #af<- get_sentiments('bing')
+     #af %>% summary
+     com_words <-tokens %>% inner_join(af)
+     com_words
+     df <- data.frame(
+        feature = com_words$word,
+        bg_colour = palette("default"),
+        stringsAsFactors = FALSE
+      )
+     df
+     #dict <- data.frame(com_w$word, bg_colour = c("pink", "yellow"),stringsAsFactors = FALSE)
+      dict1 <- as_dict(df)
+      highlight(text,dict1)
 
 
 
-#------------------------------------------------end--------------------
+    #------------------------------------------------end--------------------
