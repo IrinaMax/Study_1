@@ -1,28 +1,33 @@
-# devtools::install_github("JBGruber/highlightr")
-library(highlightr)
-library(tidytext)
-library(syuzhet)
-library(stringr)
-library(tidytext)
-text <- "I try to highlight some words in the sentence. I love data science, but this is definetely not a  data science procedure..."
+#
+ How we can highlight test 
+ 
+     #devtools::install_github("JBGruber/highlightr")
+     library(highlightr)
+     library(tidytext)
+     library(syuzhet)
+     library(stringr)
+     library(tidytext)
+     text <- "I try to highlight some words in the sentence. I love data science, but this is definetely not a  data science procedure..."
 
-# create function with  array of some specific words and colors we wanted to highlight it
+# 
+     #create function with  array of some specific words and colors we wanted to highlight it
+     df <- data.frame(feature = c("highlight some words", "data science","definetely", "procedure"),
+       bg_colour = c("pink", "yellow", "lightblue","lightgreen"),
+       stringsAsFactors = FALSE
+     )
+# 
+     convert df to dict
+     dict <- as_dict(df)
 
-df <- data.frame(feature = c("highlight some words", "data science","definetely", "procedure"),
-  bg_colour = c("pink", "yellow", "lightblue","lightgreen"),
-  stringsAsFactors = FALSE
-)
-# convert df to dict
-dict <- as_dict(df)
 # highligh 
 highlight(text, dict)
 #-------------------------
-#text <- "Good old-fashioned buy-and-hold investing might not be exciting enough to interest day traders."
-text <-  "Good old-fashioned buy-and-hold investing might not be exciting enough to interest day traders. But it can nevertheless produce exciting longer-term returns and beat out newfangled strategies."
-tokens <-  data.frame(text) %>% unnest_tokens(word, text)
-tokens
-af<- get_sentiments('afinn')
-af %>% summary
+      #text <- "Good old-fashioned buy-and-hold investing might not be exciting enough to interest day traders."
+      text <-  "Good old-fashioned buy-and-hold investing might not be exciting enough to interest day traders. But it can nevertheless produce exciting longer-term       returns and beat out newfangled strategies."
+      tokens <-  data.frame(text) %>% unnest_tokens(word, text)
+      tokens
+      af<- get_sentiments('afinn')
+      af %>% summary
 
 #af<- get_sentiments('bing')
 #af %>% summary
