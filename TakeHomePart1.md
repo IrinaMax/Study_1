@@ -1,111 +1,101 @@
-> library(dplyr)
-> # Data is 2016_YA_books.csv
-> data <- read.csv(file.choose(), header = T)
-Error in file.choose() : file choice cancelled
-> data %>% summary
-  Book.title        Author.name         Star.rating    Number.of.reviews     Length     
- Length:100         Length:100         Min.   :3.000   Min.   :   1.0    Min.   : 52.0  
- Class :character   Class :character   1st Qu.:4.000   1st Qu.:  28.0    1st Qu.:242.0  
- Mode  :character   Mode  :character   Median :4.500   Median :  74.5    Median :323.0  
-                                       Mean   :4.315   Mean   : 164.6    Mean   :327.4  
-                                       3rd Qu.:4.500   3rd Qu.: 179.0    3rd Qu.:400.0  
-                                       Max.   :5.000   Max.   :1591.0    Max.   :793.0  
-  Publisher        
- Length:100        
- Class :character  
- Mode  :character  
+# This is the part one of Take home work. Fun to work with Young Authors data :)
+      > library(dplyr)
+      > # Data is 2016_YA_books.csv
+      > data <- read.csv(file.choose(), header = T)
+
+      > data %>% summary
+              Book.title        Author.name         Star.rating    Number.of.reviews     Length     
+       Length:100         Length:100         Min.   :3.000   Min.   :   1.0    Min.   : 52.0  
+       Class :character   Class :character   1st Qu.:4.000   1st Qu.:  28.0    1st Qu.:242.0  
+       Mode  :character   Mode  :character   Median :4.500   Median :  74.5    Median :323.0  
+                                             Mean   :4.315   Mean   : 164.6    Mean   :327.4  
+                                             3rd Qu.:4.500   3rd Qu.: 179.0    3rd Qu.:400.0  
+                                             Max.   :5.000   Max.   :1591.0    Max.   :793.0  
+       Publisher        
+      Length:100        
+      Class :character  
+      Mode  :character  
                    
                    
                    
-> data %>%  str
-'data.frame':	100 obs. of  6 variables:
- $ Book.title       : chr  "Mistrust" "Girl in Pieces" "Just Juliet" "Dork in Love ~ Tales of My Dorky Love Life: Teen Romance" ...
- $ Author.name      : chr  "Margaret McHeyzer" "Kathleen Glasgow" "Charlotte Reagan" "Ann Writes" ...
- $ Star.rating      : num  4.5 4.5 4.5 4.5 5 4.5 4.5 4.5 4.5 4.5 ...
- $ Number.of.reviews: int  64 139 369 9 1 11 25 218 235 57 ...
- $ Length           : int  333 418 224 122 52 231 256 338 384 496 ...
- $ Publisher        : chr  "Amazon " "Delacorte" "Inkitt" "Amazon " ...
-> plot(data)
-> hist(data$Star.rating)
-> hist(data$Number.of.reviews)
-> hist(data$Length)
-> hist(as.numeric(as.factor(data$Publisher)))
-> # I will take subset of only successful authors
-> data1 <-  data %>%  filter(data$Star.rating >= '4.5' & data$Number.of.reviews >=100)
-> data1 %>% head(10)
-                                                        Book.title      Author.name Star.rating
-1                                                   Girl in Pieces Kathleen Glasgow         4.5
-2                                                      Just Juliet Charlotte Reagan         4.5
-3                                             Tell Me Three Things    Julie Buxbaum         4.5
-4                                        The Fever Code: Book Five    James Dashner         4.5
-5  Saven Deception: Sci-Fi Alien Romance (The Saven Series Book 1)   Kelly Hartigan         4.5
-6                      Paper Princess: A Novel (The Royals Book 1)        Erin Watt         4.5
-7                                           The Sun Is Also a Star      Nicola Yoon         4.5
-8                                                  Salt to the Sea     Ruta Sepetys         4.5
-9                       Broken Prince: A Novel (The Royals Book 2)        Erin Watt         4.5
-10            The Tales of Beedle the Bard (Hogwarts Library Book)     J.K. Rowling         4.5
-   Number.of.reviews Length      Publisher
-1                139    418      Delacorte
-2                369    224         Inkitt
-3                218    338      Delacorte
-4                235    384      Delacorte
-5                203    437  Siobhan Davis
-6                871    370        Amazon 
-7                241    386      Delacorte
-8                681    402 Philomel Books
-9                554    350        Timeout
-10              1591    128     Pottermore
-> data1 %>% summary
-  Book.title        Author.name         Star.rating    Number.of.reviews     Length     
- Length:27          Length:27          Min.   :4.500   Min.   : 106.0    Min.   :128.0  
- Class :character   Class :character   1st Qu.:4.500   1st Qu.: 157.0    1st Qu.:305.0  
- Mode  :character   Mode  :character   Median :4.500   Median : 235.0    Median :365.0  
-                                       Mean   :4.519   Mean   : 397.3    Mean   :358.6  
-                                       3rd Qu.:4.500   3rd Qu.: 515.0    3rd Qu.:401.0  
-                                       Max.   :5.000   Max.   :1591.0    Max.   :695.0  
-  Publisher        
- Length:27         
- Class :character  
- Mode  :character  
+     > data %>%  str
+     'data.frame':	100 obs. of  6 variables:
+      $ Book.title       : chr  "Mistrust" "Girl in Pieces" "Just Juliet" "Dork in Love ~ Tales of My Dorky Love Life: Teen Romance" ...
+      $ Author.name      : chr  "Margaret McHeyzer" "Kathleen Glasgow" "Charlotte Reagan" "Ann Writes" ...
+      $ Star.rating      : num  4.5 4.5 4.5 4.5 5 4.5 4.5 4.5 4.5 4.5 ...
+      $ Number.of.reviews: int  64 139 369 9 1 11 25 218 235 57 ...
+      $ Length           : int  333 418 224 122 52 231 256 338 384 496 ...
+      $ Publisher        : chr  "Amazon " "Delacorte" "Inkitt" "Amazon " ...
+     > plot(data)
+     > hist(data$Star.rating)
+     > hist(data$Number.of.reviews)
+     > hist(data$Length)
+     > hist(as.numeric(as.factor(data$Publisher)))
+     > # I will take subset of only successful authors
+     > data1 <-  data %>%  filter(data$Star.rating >= '4.5' & data$Number.of.reviews >=100)
+     > data1 %>% head(10)
+                                                             Book.title      Author.name Star.rating
+     1                                                   Girl in Pieces Kathleen Glasgow         4.5
+     2                                                      Just Juliet Charlotte Reagan         4.5
+     3                                             Tell Me Three Things    Julie Buxbaum         4.5
+     4                                        The Fever Code: Book Five    James Dashner         4.5
+     5  Saven Deception: Sci-Fi Alien Romance (The Saven Series Book 1)   Kelly Hartigan         4.5
+     6                      Paper Princess: A Novel (The Royals Book 1)        Erin Watt         4.5
+     7                                           The Sun Is Also a Star      Nicola Yoon         4.5
+     8                                                  Salt to the Sea     Ruta Sepetys         4.5
+     9                       Broken Prince: A Novel (The Royals Book 2)        Erin Watt         4.5
+     10            The Tales of Beedle the Bard (Hogwarts Library Book)     J.K. Rowling         4.5
+        Number.of.reviews Length      Publisher
+     1                139    418      Delacorte
+     2                369    224         Inkitt
+     3                218    338      Delacorte
+     4                235    384      Delacorte
+     5                203    437  Siobhan Davis
+     6                871    370        Amazon 
+     7                241    386      Delacorte
+     8                681    402 Philomel Books
+     9                554    350        Timeout
+     10              1591    128     Pottermore
+     > data1 %>% summary
+       Book.title        Author.name         Star.rating    Number.of.reviews     Length     
+      Length:27          Length:27          Min.   :4.500   Min.   : 106.0    Min.   :128.0  
+      Class :character   Class :character   1st Qu.:4.500   1st Qu.: 157.0    1st Qu.:305.0  
+      Mode  :character   Mode  :character   Median :4.500   Median : 235.0    Median :365.0  
+                                            Mean   :4.519   Mean   : 397.3    Mean   :358.6  
+                                            3rd Qu.:4.500   3rd Qu.: 515.0    3rd Qu.:401.0  
+                                            Max.   :5.000   Max.   :1591.0    Max.   :695.0  
+       Publisher        
+      Length:27         
+      Class :character  
+      Mode  :character  
                    
                    
                    
-> plot(data1)
-> hist(data1$Star.rating)
-> hist(data1$Number.of.reviews)
-> hist(data1$Length)
-> hist(as.numeric(as.factor(data1$Publisher)))
-> # correlation
-> cor.mat <- data.matrix(data)
-> dd.cor <-  cor(cor.mat)
-> dd.cor
-                     Book.title Author.name   Star.rating Number.of.reviews      Length   Publisher
-Book.title         1.0000000000  0.10717634 -0.0002176939        0.08346065  0.09256146 0.275171323
-Author.name        0.1071763395  1.00000000  0.0403459310       -0.07699612  0.05332328 0.150268795
-Star.rating       -0.0002176939  0.04034593  1.0000000000        0.09339000 -0.12574251 0.009560375
-Number.of.reviews  0.0834606548 -0.07699612  0.0933900022        1.00000000  0.15443546 0.028034615
-Length             0.0925614642  0.05332328 -0.1257425140        0.15443546  1.00000000 0.055748618
-Publisher          0.2751713228  0.15026879  0.0095603748        0.02803462  0.05574862 1.000000000
-> #Examining only successful authors I can see nice signal of Book.title and also from Length
-> # Number of review not indicate any strong correlation, but slightly with Author.name and Length
-> cor.mat1 <- data.matrix(data1)
-> dd.cor1 <-  cor(cor.mat1)
-> dd.cor1
-                  Book.title Author.name Star.rating Number.of.reviews      Length   Publisher
-Book.title        1.00000000   0.1579383   0.3021478        0.04281143  0.04457305  0.25570506
-Author.name       0.15793827   1.0000000   0.0000000       -0.12430829  0.33441651  0.10557782
-Star.rating       0.30214785   0.0000000   1.0000000       -0.12764914  0.17661525  0.11274934
-Number.of.reviews 0.04281143  -0.1243083  -0.1276491        1.00000000  0.07763590 -0.02137149
-Length            0.04457305   0.3344165   0.1766153        0.07763590  1.00000000 -0.13350184
-Publisher         0.25570506   0.1055778   0.1127493       -0.02137149 -0.13350184  1.00000000
-> library(corrplot)
-> corrplot(dd.cor)
-> corrplot(dd.cor1)
-> #To confirm my outcome I will leverage Analsysis of variance
-> #anova on all data clearly indicate correlation with Number of review and author.name
-> lmod <- lm(data$Star.rating~ data$Number.of.reviews+data$Author.name+ data$Length + data$Author.name , data)
-> anova(lmod)
-Analysis of Variance Table
+     > plot(data1)
+     > hist(data1$Star.rating)
+     > hist(data1$Number.of.reviews)
+     > hist(data1$Length)
+     > hist(as.numeric(as.factor(data1$Publisher)))
+     > # correlation
+     > cor.mat <- data.matrix(data)
+     > dd.cor <-  cor(cor.mat)
+     > dd.cor
+
+
+    > #Examining only successful authors I can see nice signal of Book.title and also from Length
+    > # Number of review not indicate any strong correlation, but slightly with Author.name and Length
+    > cor.mat1 <- data.matrix(data1)
+    > dd.cor1 <-  cor(cor.mat1)
+    > dd.cor1
+
+    > library(corrplot)
+    > corrplot(dd.cor)
+    > corrplot(dd.cor1)
+    > #To confirm my outcome I will leverage Analsysis of variance
+    > #anova on all data clearly indicate correlation with Number of review and author.name
+    > lmod <- lm(data$Star.rating~ data$Number.of.reviews+data$Author.name+ data$Length + data$Author.name , data)
+    > anova(lmod)
+    Analysis of Variance Table
 
 Response: data$Star.rating
                        Df Sum Sq Mean Sq    F value Pr(>F)    
