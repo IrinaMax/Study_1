@@ -6,12 +6,15 @@
      library(syuzhet)
      library(stringr)
      library(tidytext)
+Let's take sentence from Wikipedia about data science and try to highlite some words.
+
      text <-  "Data science is an interdisciplinary field that uses scientific methods, processes, 
               algorithms and systems to extract knowledge and insights from structured and unstructured data,
               and apply knowledge and actionable insights from data."
 # 
-     #My idea is create array of some specific words and assign every word to the specific color we wanted to highlight in this sentence
-     df <- data.frame(
+My idea is create array of some specific words and assign every word to the particular color we wanted to highlight in this sentence
+    
+    df <- data.frame(
           feature = c("data", "scientific methods", "structured and unstructured","actionable insights", " processes"),
           bg_colour = c("pink", "yellow", "lightblue","lightgreen", "gray"),
           stringsAsFactors = FALSE
