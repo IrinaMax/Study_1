@@ -35,8 +35,8 @@ My idea is create array of some specific words and assign every word to the part
       af<- get_sentiments('afinn')
       af %>% summary
 
-     #af<- get_sentiments('bing')
-     #af %>% summary
+     #bn<- get_sentiments('bing')
+     #bn %>% summary
      com_words <-tokens %>% inner_join(af)
      com_words
      df <- data.frame(
