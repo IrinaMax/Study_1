@@ -28,9 +28,17 @@
       $ Publisher        : chr  "Amazon " "Delacorte" "Inkitt" "Amazon " ...
      > plot(data)
      > hist(data$Star.rating)
+  ![H_raiting](https://user-images.githubusercontent.com/16123495/120145791-f3898d80-c198-11eb-8c75-72a288e31660.png)
+  
      > hist(data$Number.of.reviews)
+  ![H_nReviews](https://user-images.githubusercontent.com/16123495/120145883-161ba680-c199-11eb-9678-f574c6260f31.png)
+  
      > hist(data$Length)
+  ![H_Length](https://user-images.githubusercontent.com/16123495/120145962-33507500-c199-11eb-9f7b-a2f8965a4769.png)
+  
      > hist(as.numeric(as.factor(data$Publisher)))
+  ![H-Publisher](https://user-images.githubusercontent.com/16123495/120146023-4e22e980-c199-11eb-8dc9-e7d722d8d9f8.png)   
+     
      > # I will take subset of only successful authors
      > data1 <-  data %>%  filter(data$Star.rating >= '4.5' & data$Number.of.reviews >=100)
      > data1 %>% head(10)
@@ -95,6 +103,7 @@
     > library(corrplot)
     > corrplot(dd.cor)
     > corrplot(dd.cor1)
+    
   ![Cor M1](https://user-images.githubusercontent.com/16123495/120144586-07cc8b00-c197-11eb-84c3-2c8777976b39.png)
   ![Cor M2](https://user-images.githubusercontent.com/16123495/120144680-39dded00-c197-11eb-884f-073f8fd3b402.png)
   
