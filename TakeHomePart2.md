@@ -24,7 +24,7 @@
       highlight(text, dict)
 ![Screen Shot 2021-05-30 at 11 10 29 PM](https://user-images.githubusercontent.com/16123495/120147971-5f212a00-c19c-11eb-83eb-2a05085bb804.png)
 
- Let's try to highlight some words based on the Sentiment score. 
+ Let's try to highlight some words based on the Sentiment score. I will use for this example Lexicon "afinn". My idea is the same: find common words in lexicon form the text , created dictionary and highlight them base on the palette in this case I just appointed "default". But we can priretize some words by stronger color.
  
       text <-  "Good old-fashioned buy-and-hold investing might not be exciting enough to interest day traders. But it can nevertheless produce exciting longer-term       returns and beat out newfangled strategies."
       tokens <-  data.frame(text) %>% unnest_tokens(word, text)
