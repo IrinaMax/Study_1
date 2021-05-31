@@ -84,7 +84,7 @@
      > hist(data1$Number.of.reviews)
      > hist(data1$Length)
      > hist(as.numeric(as.factor(data1$Publisher)))
-   Correlation is actually the best to begun with any valiable selection. Correlation on full dataset did not appoint any strong correlation with Star.Rating.
+   Correlation is actually the best to begin with any valiable selection. Correlation on full dataset did not appoint any strong correlation with Star.Rating.
    I would detirmin strong is more then 50%. The signal unfortunately very week.
    
      > cor.mat <- data.matrix(data)
