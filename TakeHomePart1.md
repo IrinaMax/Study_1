@@ -76,24 +76,30 @@
      > hist(data1$Number.of.reviews)
      > hist(data1$Length)
      > hist(as.numeric(as.factor(data1$Publisher)))
-     > # correlation
+   Correlation is actually the best to begun with any valiable selection. Correlation on full dataset did not appoint any strong correlation with Star.Rating.
+   I would detirmin strong is more then 50%. The signal unfortunately very week.
+   
      > cor.mat <- data.matrix(data)
      > dd.cor <-  cor(cor.mat)
      > dd.cor
+![dd cor](https://user-images.githubusercontent.com/16123495/120144687-3e0a0a80-c197-11eb-9916-ebd732e2952c.png)
 
 
-    > #Examining only successful authors I can see nice signal of Book.title and also from Length
-    > # Number of review not indicate any strong correlation, but slightly with Author.name and Length
+   Examining only successful authors I can see nice signal of Book.title and also from Length
+   Number of review not indicate any strong correlation, but slightly with Author.name and Length
     > cor.mat1 <- data.matrix(data1)
     > dd.cor1 <-  cor(cor.mat1)
     > dd.cor1
+![dd cor1](https://user-images.githubusercontent.com/16123495/120144694-419d9180-c197-11eb-88a7-ace1afd82e5e.png)
 
     > library(corrplot)
     > corrplot(dd.cor)
     > corrplot(dd.cor1)
   ![Cor M1](https://user-images.githubusercontent.com/16123495/120144586-07cc8b00-c197-11eb-84c3-2c8777976b39.png)
   ![Cor M2](https://user-images.githubusercontent.com/16123495/120144680-39dded00-c197-11eb-884f-073f8fd3b402.png)
-    > #To confirm my outcome I will leverage Analsysis of variance
+  
+  To confirm my outcome I will leverage Analsysis of variance
+   
     > #anova on all data clearly indicate correlation with Number of review and author.name
     > lmod <- lm(data$Star.rating~ data$Number.of.reviews+data$Author.name+ data$Length + data$Author.name , data)
     > anova(lmod)
