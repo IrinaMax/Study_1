@@ -286,6 +286,6 @@
      
    ![Screen Shot 2021-05-31 at 4 47 34 PM](https://user-images.githubusercontent.com/16123495/120249484-e9ff3480-c22f-11eb-9217-88118b30b052.png)  
  
- The top5 of Publishers for successgul authors are 
+ The top 5 of Publishers for successful authors are 
  "Delacorte", "Amazon ", "Dreamscape Publishing", "HarperCollins Publishers" and "Philomel Books",
  and there is some influence to get better rating but to work with Publisher have still very low hypothesis of success.
