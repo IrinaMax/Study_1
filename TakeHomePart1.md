@@ -1,0 +1,248 @@
+> library(dplyr)
+> # Data is 2016_YA_books.csv
+> data <- read.csv(file.choose(), header = T)
+Error in file.choose() : file choice cancelled
+> data %>% summary
+  Book.title        Author.name         Star.rating    Number.of.reviews     Length     
+ Length:100         Length:100         Min.   :3.000   Min.   :   1.0    Min.   : 52.0  
+ Class :character   Class :character   1st Qu.:4.000   1st Qu.:  28.0    1st Qu.:242.0  
+ Mode  :character   Mode  :character   Median :4.500   Median :  74.5    Median :323.0  
+                                       Mean   :4.315   Mean   : 164.6    Mean   :327.4  
+                                       3rd Qu.:4.500   3rd Qu.: 179.0    3rd Qu.:400.0  
+                                       Max.   :5.000   Max.   :1591.0    Max.   :793.0  
+  Publisher        
+ Length:100        
+ Class :character  
+ Mode  :character  
+                   
+                   
+                   
+> data %>%  str
+'data.frame':	100 obs. of  6 variables:
+ $ Book.title       : chr  "Mistrust" "Girl in Pieces" "Just Juliet" "Dork in Love ~ Tales of My Dorky Love Life: Teen Romance" ...
+ $ Author.name      : chr  "Margaret McHeyzer" "Kathleen Glasgow" "Charlotte Reagan" "Ann Writes" ...
+ $ Star.rating      : num  4.5 4.5 4.5 4.5 5 4.5 4.5 4.5 4.5 4.5 ...
+ $ Number.of.reviews: int  64 139 369 9 1 11 25 218 235 57 ...
+ $ Length           : int  333 418 224 122 52 231 256 338 384 496 ...
+ $ Publisher        : chr  "Amazon " "Delacorte" "Inkitt" "Amazon " ...
+> plot(data)
+> hist(data$Star.rating)
+> hist(data$Number.of.reviews)
+> hist(data$Length)
+> hist(as.numeric(as.factor(data$Publisher)))
+> # I will take subset of only successful authors
+> data1 <-  data %>%  filter(data$Star.rating >= '4.5' & data$Number.of.reviews >=100)
+> data1 %>% head(10)
+                                                        Book.title      Author.name Star.rating
+1                                                   Girl in Pieces Kathleen Glasgow         4.5
+2                                                      Just Juliet Charlotte Reagan         4.5
+3                                             Tell Me Three Things    Julie Buxbaum         4.5
+4                                        The Fever Code: Book Five    James Dashner         4.5
+5  Saven Deception: Sci-Fi Alien Romance (The Saven Series Book 1)   Kelly Hartigan         4.5
+6                      Paper Princess: A Novel (The Royals Book 1)        Erin Watt         4.5
+7                                           The Sun Is Also a Star      Nicola Yoon         4.5
+8                                                  Salt to the Sea     Ruta Sepetys         4.5
+9                       Broken Prince: A Novel (The Royals Book 2)        Erin Watt         4.5
+10            The Tales of Beedle the Bard (Hogwarts Library Book)     J.K. Rowling         4.5
+   Number.of.reviews Length      Publisher
+1                139    418      Delacorte
+2                369    224         Inkitt
+3                218    338      Delacorte
+4                235    384      Delacorte
+5                203    437  Siobhan Davis
+6                871    370        Amazon 
+7                241    386      Delacorte
+8                681    402 Philomel Books
+9                554    350        Timeout
+10              1591    128     Pottermore
+> data1 %>% summary
+  Book.title        Author.name         Star.rating    Number.of.reviews     Length     
+ Length:27          Length:27          Min.   :4.500   Min.   : 106.0    Min.   :128.0  
+ Class :character   Class :character   1st Qu.:4.500   1st Qu.: 157.0    1st Qu.:305.0  
+ Mode  :character   Mode  :character   Median :4.500   Median : 235.0    Median :365.0  
+                                       Mean   :4.519   Mean   : 397.3    Mean   :358.6  
+                                       3rd Qu.:4.500   3rd Qu.: 515.0    3rd Qu.:401.0  
+                                       Max.   :5.000   Max.   :1591.0    Max.   :695.0  
+  Publisher        
+ Length:27         
+ Class :character  
+ Mode  :character  
+                   
+                   
+                   
+> plot(data1)
+> hist(data1$Star.rating)
+> hist(data1$Number.of.reviews)
+> hist(data1$Length)
+> hist(as.numeric(as.factor(data1$Publisher)))
+> # correlation
+> cor.mat <- data.matrix(data)
+> dd.cor <-  cor(cor.mat)
+> dd.cor
+                     Book.title Author.name   Star.rating Number.of.reviews      Length   Publisher
+Book.title         1.0000000000  0.10717634 -0.0002176939        0.08346065  0.09256146 0.275171323
+Author.name        0.1071763395  1.00000000  0.0403459310       -0.07699612  0.05332328 0.150268795
+Star.rating       -0.0002176939  0.04034593  1.0000000000        0.09339000 -0.12574251 0.009560375
+Number.of.reviews  0.0834606548 -0.07699612  0.0933900022        1.00000000  0.15443546 0.028034615
+Length             0.0925614642  0.05332328 -0.1257425140        0.15443546  1.00000000 0.055748618
+Publisher          0.2751713228  0.15026879  0.0095603748        0.02803462  0.05574862 1.000000000
+> #Examining only successful authors I can see nice signal of Book.title and also from Length
+> # Number of review not indicate any strong correlation, but slightly with Author.name and Length
+> cor.mat1 <- data.matrix(data1)
+> dd.cor1 <-  cor(cor.mat1)
+> dd.cor1
+                  Book.title Author.name Star.rating Number.of.reviews      Length   Publisher
+Book.title        1.00000000   0.1579383   0.3021478        0.04281143  0.04457305  0.25570506
+Author.name       0.15793827   1.0000000   0.0000000       -0.12430829  0.33441651  0.10557782
+Star.rating       0.30214785   0.0000000   1.0000000       -0.12764914  0.17661525  0.11274934
+Number.of.reviews 0.04281143  -0.1243083  -0.1276491        1.00000000  0.07763590 -0.02137149
+Length            0.04457305   0.3344165   0.1766153        0.07763590  1.00000000 -0.13350184
+Publisher         0.25570506   0.1055778   0.1127493       -0.02137149 -0.13350184  1.00000000
+> library(corrplot)
+> corrplot(dd.cor)
+> corrplot(dd.cor1)
+> #To confirm my outcome I will leverage Analsysis of variance
+> #anova on all data clearly indicate correlation with Number of review and author.name
+> lmod <- lm(data$Star.rating~ data$Number.of.reviews+data$Author.name+ data$Length + data$Author.name , data)
+> anova(lmod)
+Analysis of Variance Table
+
+Response: data$Star.rating
+                       Df Sum Sq Mean Sq    F value Pr(>F)    
+data$Number.of.reviews  1  0.138 0.13804 1.7909e+30 <2e-16 ***
+data$Author.name       95 15.690 0.16515 2.1426e+30 <2e-16 ***
+data$Length             1  0.000 0.00000 2.4000e+00 0.2615    
+Residuals               2  0.000 0.00000                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Warning message:
+In anova.lm(lmod) :
+  ANOVA F-tests on an essentially perfect fit are unreliable
+> # anova on the high rating just proving significance of Author.name and nothing with Length
+> # It's mean when authors already popular the book size do not have a big matter
+> lmod1 <- lm(data1$Star.rating~ data1$Author.name+ data1$Length , data1)
+> lmod1 %>% anova()
+Analysis of Variance Table
+
+Response: data1$Star.rating
+                  Df  Sum Sq  Mean Sq    F value Pr(>F)    
+data1$Author.name 24 0.24074 0.010031 3.4926e+31 <2e-16 ***
+data1$Length       1 0.00000 0.000000 4.1620e-01 0.6352    
+Residuals          1 0.00000 0.000000                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Warning message:
+In anova.lm(.) : ANOVA F-tests on an essentially perfect fit are unreliable
+> plot(lmod1$residuals)  # plot of residuals mostly ZERO except of few data points
+> #anova on number of review have not significant evidence with any column
+> lmod2 <- lm(data1$Number.of.reviews~ data1$Star.rating+ data1$Author.name+ data1$Length, data1)
+> lmod2 %>% anova()
+Analysis of Variance Table
+
+Response: data1$Number.of.reviews
+                  Df  Sum Sq Mean Sq F value Pr(>F)
+data1$Star.rating  1   60947   60947  2.2604 0.3737
+data1$Author.name 23 3627201  157704  5.8489 0.3169
+data1$Length       1   25266   25266  0.9371 0.5103
+Residuals          1   26963   26963               
+> #anova with successful autors submitting some evidence of Length column where p=0.01
+> #lmod3 <- lm( data1$Star.rating~data1$Author.name  , data1)
+> plot(lmod$residuals)  # plot of residuals mostly ZERO except of few data points
+> #T-test is statistically usually mostly clear as alternative parametric test I can rely for pairwise dependency
+> t.test(data$Star.rating, data$Length, var.equal = T)  #p-value < 2.2e-16,Length is significant for the rating
+
+	Two Sample t-test
+
+data:  data$Star.rating and data$Length
+t = -27.832, df = 198, p-value < 2.2e-16
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -346.0194 -300.2306
+sample estimates:
+mean of x mean of y 
+    4.315   327.440 
+
+> t.test(data$Number.of.reviews, data$Length, var.equal = T)  #p-value < 2.2e-16, Length is significant also for the
+
+	Two Sample t-test
+
+data:  data$Number.of.reviews and data$Length
+t = -5.6909, df = 198, p-value = 4.501e-08
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -219.3346 -106.4454
+sample estimates:
+mean of x mean of y 
+   164.55    327.44 
+
+> t.test(data$Star.rating, data$Number.of.reviews, var.equal = T)  # p  4.809e-09
+
+	Two Sample t-test
+
+data:  data$Star.rating and data$Number.of.reviews
+t = -6.1246, df = 198, p-value = 4.809e-09
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -211.8282 -108.6418
+sample estimates:
+mean of x mean of y 
+    4.315   164.550 
+
+> # Kruskal Wallis is non parametric rank test and outcome usually weaker then t-test
+> # but I try to check it out to compare P value, where Length is smallest but still did not significant.
+> kruskal.test(data$Star.rating~ data$Length, data =data)
+
+	Kruskal-Wallis rank sum test
+
+data:  data$Star.rating by data$Length
+Kruskal-Wallis chi-squared = 85.153, df = 78, p-value = 0.2712
+
+> kruskal.test(data$Star.rating~ data$Book.title, data =data)
+
+	Kruskal-Wallis rank sum test
+
+data:  data$Star.rating by data$Book.title
+Kruskal-Wallis chi-squared = 99, df = 99, p-value = 0.4811
+
+> kruskal.test(data$Star.rating~ data$Author.name, data =data)
+
+	Kruskal-Wallis rank sum test
+
+data:  data$Star.rating by data$Author.name
+Kruskal-Wallis chi-squared = 99, df = 95, p-value = 0.369
+
+> kruskal.test(data$Star.rating~ data$Publisher, data =data)
+
+	Kruskal-Wallis rank sum test
+
+data:  data$Star.rating by data$Publisher
+Kruskal-Wallis chi-squared = 55.948, df = 55, p-value = 0.439
+
+> #Let's see the Wicoxson result
+> wilcox.test(data$Star.rating, data$Length)
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  data$Star.rating and data$Length
+W = 0, p-value < 2.2e-16
+alternative hypothesis: true location shift is not equal to 0
+
+> wilcox.test(data$Star.rating, as.numeric(as.factor(data$Author.name)))
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  data$Star.rating and as.numeric(as.factor(data$Author.name))
+W = 460, p-value < 2.2e-16
+alternative hypothesis: true location shift is not equal to 0
+
+> wilcox.test(data$Star.rating, as.numeric(as.factor(data$Publisher)))
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  data$Star.rating and as.numeric(as.factor(data$Publisher))
+W = 1886, p-value = 1.343e-14
+alternative hypothesis: true location shift is not equal to 0
+
+> 
+> 
+> # Wilcoxon test also confirming significance of  Length column
