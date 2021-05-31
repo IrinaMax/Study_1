@@ -256,9 +256,10 @@
 	> # confirming significant level of Author name and some effect of Publisher, but this is Nonparametric test and I would not rely on it without the other testing.
 
 # Exemining Publishers for impact of success:
+
      data1 %>% group_by(data1$Publisher) %>% count()
      # A tibble: 19 x 2
-# Groups:   data1$Publisher [19]
+	# Groups:   data1$Publisher [19]
 	   `data1$Publisher`                   n
 	   <chr>                           <int>
 	 1 "Amazon "                           2
@@ -287,4 +288,4 @@
  
  The top5 of Publishers for successgul authors are 
  "Delacorte", "Amazon ", "Dreamscape Publishing", "HarperCollins Publishers" and "Philomel Books",
- and there is some influence to ger better rating but to work with Publisher have still very low hypothesis of success.
+ and there is some influence to get better rating but to work with Publisher have still very low hypothesis of success.
