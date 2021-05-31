@@ -19,7 +19,7 @@
      Convert df to dictionary with defined color palette
      dict <- as_dict(df)
 
-# highligh 
+# Combine the text and dictionary
       highlight(text, dict)
       
 ![Screen Shot 2021-05-30 at 3 59 18 PM](https://user-images.githubusercontent.com/16123495/120122896-98d43f80-c160-11eb-85cc-3f222bb3e02a.png)      
