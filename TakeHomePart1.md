@@ -254,3 +254,37 @@
 
 	> # Wilcoxon test also confirming significance of  Length column
 	> # confirming significant level of Author name and some effect of Publisher, but this is Nonparametric test and I would not rely on it without the other testing.
+
+# Exemining Publishers for impact of success:
+     data1 %>% group_by(data1$Publisher) %>% count()
+     # A tibble: 19 x 2
+# Groups:   data1$Publisher [19]
+	   `data1$Publisher`                   n
+	   <chr>                           <int>
+	 1 "Amazon "                           2
+	 2 "Atheneum/Caitlyn Dlouhy Books"     1
+	 3 "Bloomsbury USA Childrens"          1
+	 4 "Delacorte"                         5
+	 5 "Disney Hyperion"                   1
+ 	 6 "Disney Lucasfilm Press"            1
+ 	 7 "Dreamscape Publishing"             2
+ 	 8 "Entangled: Teen"                   1
+ 	 9 "Flatiron Books"                    1
+	10 "Greenwillow Books"                 1
+	11 "Harlequin Teen"                    1
+	12 "HarperCollins Publishers"          2
+	13 "Inkitt"                            1
+	14 "Philomel Books"                    2
+	15 "Pottermore"                        1
+	16 "Simon and Schuster"                1
+	17 "Siobhan Davis"                     1
+	18 "Skyscrape"                         1
+	19 "Timeout"
+
+     ggplot(data1)+ geom_bar(aes(data1$Publisher))
+     
+   ![Screen Shot 2021-05-31 at 4 47 34 PM](https://user-images.githubusercontent.com/16123495/120249484-e9ff3480-c22f-11eb-9217-88118b30b052.png)  
+ 
+ The top5 of Publishers for successgul authors are 
+ "Delacorte", "Amazon ", "Dreamscape Publishing", "HarperCollins Publishers" and "Philomel Books",
+ and there is some influence to ger better rating but to work with Publisher have still very low hypothesis of success.
