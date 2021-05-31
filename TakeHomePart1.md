@@ -85,16 +85,17 @@
      > hist(data1$Length)
      > hist(as.numeric(as.factor(data1$Publisher)))
    Correlation is actually the best to begin with any valiable selection. Correlation on full dataset did not appoint any strong correlation with Star.Rating.
-   I would detirmin strong is more then 50%. The signal unfortunately very week.
+   I would determine strong is more then 50%. The signal unfortunately very week.
    
      > cor.mat <- data.matrix(data)
      > dd.cor <-  cor(cor.mat)
      > dd.cor
+     
 ![dd cor](https://user-images.githubusercontent.com/16123495/120144687-3e0a0a80-c197-11eb-9916-ebd732e2952c.png)
-
 
    Examining only successful authors I can see nice signal of Book.title and also from Length
    Number of review not indicate any strong correlation, but slightly with Author.name and Length
+   
     > cor.mat1 <- data.matrix(data1)
     > dd.cor1 <-  cor(cor.mat1)
     > dd.cor1
