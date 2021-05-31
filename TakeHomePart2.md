@@ -18,9 +18,9 @@ My idea is create array of some specific words and assign every word to the part
           feature = c("data", "scientific methods", "structured and unstructured","actionable insights", " processes"),
           bg_colour = c("pink", "yellow", "lightblue","lightgreen", "gray"),
           stringsAsFactors = FALSE
-     )
-# 
-     Convert df to dictionary with defined color palette
+     ) 
+ Convert df to dictionary with defined color palette
+     # 
      dict <- as_dict(df)
 
 # Combine the text and dictionary
