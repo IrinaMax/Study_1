@@ -91,6 +91,8 @@
     > library(corrplot)
     > corrplot(dd.cor)
     > corrplot(dd.cor1)
+  ![Cor M1](https://user-images.githubusercontent.com/16123495/120144586-07cc8b00-c197-11eb-84c3-2c8777976b39.png)
+  ![Cor M2](https://user-images.githubusercontent.com/16123495/120144680-39dded00-c197-11eb-884f-073f8fd3b402.png)
     > #To confirm my outcome I will leverage Analsysis of variance
     > #anova on all data clearly indicate correlation with Number of review and author.name
     > lmod <- lm(data$Star.rating~ data$Number.of.reviews+data$Author.name+ data$Length + data$Author.name , data)
