@@ -97,142 +97,142 @@
     > anova(lmod)
     Analysis of Variance Table
 
-Response: data$Star.rating
-                       Df Sum Sq Mean Sq    F value Pr(>F)    
-data$Number.of.reviews  1  0.138 0.13804 1.7909e+30 <2e-16 ***
-data$Author.name       95 15.690 0.16515 2.1426e+30 <2e-16 ***
-data$Length             1  0.000 0.00000 2.4000e+00 0.2615    
-Residuals               2  0.000 0.00000                      
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-Warning message:
-In anova.lm(lmod) :
-  ANOVA F-tests on an essentially perfect fit are unreliable
-> # anova on the high rating just proving significance of Author.name and nothing with Length
-> # It's mean when authors already popular the book size do not have a big matter
-> lmod1 <- lm(data1$Star.rating~ data1$Author.name+ data1$Length , data1)
-> lmod1 %>% anova()
-Analysis of Variance Table
+     Response: data$Star.rating
+                             Df Sum Sq Mean Sq    F value Pr(>F)    
+     data$Number.of.reviews  1  0.138 0.13804 1.7909e+30 <2e-16 ***
+     data$Author.name       95 15.690 0.16515 2.1426e+30 <2e-16 ***
+     data$Length             1  0.000 0.00000 2.4000e+00 0.2615    
+     Residuals               2  0.000 0.00000                      
+     ---
+     Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+     Warning message:
+     In anova.lm(lmod) :
+       ANOVA F-tests on an essentially perfect fit are unreliable
+     > # anova on the high rating just proving significance of Author.name and nothing with Length
+     > # It's mean when authors already popular the book size do not have a big matter
+     > lmod1 <- lm(data1$Star.rating~ data1$Author.name+ data1$Length , data1)
+     > lmod1 %>% anova()
+     Analysis of Variance Table
 
-Response: data1$Star.rating
+     Response: data1$Star.rating
                   Df  Sum Sq  Mean Sq    F value Pr(>F)    
-data1$Author.name 24 0.24074 0.010031 3.4926e+31 <2e-16 ***
-data1$Length       1 0.00000 0.000000 4.1620e-01 0.6352    
-Residuals          1 0.00000 0.000000                      
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-Warning message:
-In anova.lm(.) : ANOVA F-tests on an essentially perfect fit are unreliable
-> plot(lmod1$residuals)  # plot of residuals mostly ZERO except of few data points
-> #anova on number of review have not significant evidence with any column
-> lmod2 <- lm(data1$Number.of.reviews~ data1$Star.rating+ data1$Author.name+ data1$Length, data1)
-> lmod2 %>% anova()
-Analysis of Variance Table
+     data1$Author.name 24 0.24074 0.010031 3.4926e+31 <2e-16 ***
+     data1$Length       1 0.00000 0.000000 4.1620e-01 0.6352    
+     Residuals          1 0.00000 0.000000                      
+     ---
+     Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+     Warning message:
+     In anova.lm(.) : ANOVA F-tests on an essentially perfect fit are unreliable
+     > plot(lmod1$residuals)  # plot of residuals mostly ZERO except of few data points
+     > #anova on number of review have not significant evidence with any column
+     > lmod2 <- lm(data1$Number.of.reviews~ data1$Star.rating+ data1$Author.name+ data1$Length, data1)
+     > lmod2 %>% anova()
+     Analysis of Variance Table
 
-Response: data1$Number.of.reviews
-                  Df  Sum Sq Mean Sq F value Pr(>F)
-data1$Star.rating  1   60947   60947  2.2604 0.3737
-data1$Author.name 23 3627201  157704  5.8489 0.3169
-data1$Length       1   25266   25266  0.9371 0.5103
-Residuals          1   26963   26963               
-> #anova with successful autors submitting some evidence of Length column where p=0.01
-> #lmod3 <- lm( data1$Star.rating~data1$Author.name  , data1)
-> plot(lmod$residuals)  # plot of residuals mostly ZERO except of few data points
-> #T-test is statistically usually mostly clear as alternative parametric test I can rely for pairwise dependency
-> t.test(data$Star.rating, data$Length, var.equal = T)  #p-value < 2.2e-16,Length is significant for the rating
+     Response: data1$Number.of.reviews
+                       Df  Sum Sq Mean Sq F value Pr(>F)
+     data1$Star.rating  1   60947   60947  2.2604 0.3737
+     data1$Author.name 23 3627201  157704  5.8489 0.3169
+     data1$Length       1   25266   25266  0.9371 0.5103
+     Residuals          1   26963   26963               
+     > #anova with successful autors submitting some evidence of Length column where p=0.01
+     > #lmod3 <- lm( data1$Star.rating~data1$Author.name  , data1)
+     > plot(lmod$residuals)  # plot of residuals mostly ZERO except of few data points
+     > #T-test is statistically usually mostly clear as alternative parametric test I can rely for pairwise dependency
+     > t.test(data$Star.rating, data$Length, var.equal = T)  #p-value < 2.2e-16,Length is significant for the rating
 
-	Two Sample t-test
+          	Two Sample t-test
 
-data:  data$Star.rating and data$Length
-t = -27.832, df = 198, p-value < 2.2e-16
-alternative hypothesis: true difference in means is not equal to 0
-95 percent confidence interval:
- -346.0194 -300.2306
-sample estimates:
-mean of x mean of y 
-    4.315   327.440 
+     data:  data$Star.rating and data$Length
+     t = -27.832, df = 198, p-value < 2.2e-16
+     alternative hypothesis: true difference in means is not equal to 0
+     95 percent confidence interval:
+      -346.0194 -300.2306
+     sample estimates:
+     mean of x mean of y 
+         4.315   327.440 
 
-> t.test(data$Number.of.reviews, data$Length, var.equal = T)  #p-value < 2.2e-16, Length is significant also for the
+     > t.test(data$Number.of.reviews, data$Length, var.equal = T)  #p-value < 2.2e-16, Length is significant also for the
 
-	Two Sample t-test
+	     Two Sample t-test
 
-data:  data$Number.of.reviews and data$Length
-t = -5.6909, df = 198, p-value = 4.501e-08
-alternative hypothesis: true difference in means is not equal to 0
-95 percent confidence interval:
- -219.3346 -106.4454
-sample estimates:
-mean of x mean of y 
-   164.55    327.44 
+     data:  data$Number.of.reviews and data$Length
+     t = -5.6909, df = 198, p-value = 4.501e-08
+     alternative hypothesis: true difference in means is not equal to 0
+     95 percent confidence interval:
+      -219.3346 -106.4454
+     sample estimates:
+     mean of x mean of y 
+        164.55    327.44 
 
-> t.test(data$Star.rating, data$Number.of.reviews, var.equal = T)  # p  4.809e-09
+     > t.test(data$Star.rating, data$Number.of.reviews, var.equal = T)  # p  4.809e-09
 
-	Two Sample t-test
+        	Two Sample t-test
 
-data:  data$Star.rating and data$Number.of.reviews
-t = -6.1246, df = 198, p-value = 4.809e-09
-alternative hypothesis: true difference in means is not equal to 0
-95 percent confidence interval:
- -211.8282 -108.6418
-sample estimates:
-mean of x mean of y 
-    4.315   164.550 
+     data:  data$Star.rating and data$Number.of.reviews
+     t = -6.1246, df = 198, p-value = 4.809e-09
+       alternative hypothesis: true difference in means is not equal to 0
+     95 percent confidence interval:
+      -211.8282 -108.6418
+     sample estimates:
+     mean of x mean of y 
+         4.315   164.550 
 
-> # Kruskal Wallis is non parametric rank test and outcome usually weaker then t-test
-> # but I try to check it out to compare P value, where Length is smallest but still did not significant.
-> kruskal.test(data$Star.rating~ data$Length, data =data)
+	> # Kruskal Wallis is non parametric rank test and outcome usually weaker then t-test
+	> # but I try to check it out to compare P value, where Length is smallest but still did not significant.
+	> kruskal.test(data$Star.rating~ data$Length, data =data)
 
-	Kruskal-Wallis rank sum test
+		Kruskal-Wallis rank sum test
 
-data:  data$Star.rating by data$Length
-Kruskal-Wallis chi-squared = 85.153, df = 78, p-value = 0.2712
+	data:  data$Star.rating by data$Length
+	Kruskal-Wallis chi-squared = 85.153, df = 78, p-value = 0.2712
 
-> kruskal.test(data$Star.rating~ data$Book.title, data =data)
+	> kruskal.test(data$Star.rating~ data$Book.title, data =data)
 
-	Kruskal-Wallis rank sum test
+		Kruskal-Wallis rank sum test
 
-data:  data$Star.rating by data$Book.title
-Kruskal-Wallis chi-squared = 99, df = 99, p-value = 0.4811
+	data:  data$Star.rating by data$Book.title
+	Kruskal-Wallis chi-squared = 99, df = 99, p-value = 0.4811
 
-> kruskal.test(data$Star.rating~ data$Author.name, data =data)
+	> kruskal.test(data$Star.rating~ data$Author.name, data =data)
 
-	Kruskal-Wallis rank sum test
+		Kruskal-Wallis rank sum test
 
-data:  data$Star.rating by data$Author.name
-Kruskal-Wallis chi-squared = 99, df = 95, p-value = 0.369
+	data:  data$Star.rating by data$Author.name
+	Kruskal-Wallis chi-squared = 99, df = 95, p-value = 0.369
 
-> kruskal.test(data$Star.rating~ data$Publisher, data =data)
+	> kruskal.test(data$Star.rating~ data$Publisher, data =data)
 
-	Kruskal-Wallis rank sum test
+		Kruskal-Wallis rank sum test
 
-data:  data$Star.rating by data$Publisher
-Kruskal-Wallis chi-squared = 55.948, df = 55, p-value = 0.439
+	data:  data$Star.rating by data$Publisher
+	Kruskal-Wallis chi-squared = 55.948, df = 55, p-value = 0.439
 
-> #Let's see the Wicoxson result
-> wilcox.test(data$Star.rating, data$Length)
+	> #Let's see the Wicoxson result
+	> wilcox.test(data$Star.rating, data$Length)
 
-	Wilcoxon rank sum test with continuity correction
+		Wilcoxon rank sum test with continuity correction
 
-data:  data$Star.rating and data$Length
-W = 0, p-value < 2.2e-16
-alternative hypothesis: true location shift is not equal to 0
+	data:  data$Star.rating and data$Length
+	W = 0, p-value < 2.2e-16
+	alternative hypothesis: true location shift is not equal to 0
 
-> wilcox.test(data$Star.rating, as.numeric(as.factor(data$Author.name)))
+	> wilcox.test(data$Star.rating, as.numeric(as.factor(data$Author.name)))
 
-	Wilcoxon rank sum test with continuity correction
+		Wilcoxon rank sum test with continuity correction
 
-data:  data$Star.rating and as.numeric(as.factor(data$Author.name))
-W = 460, p-value < 2.2e-16
-alternative hypothesis: true location shift is not equal to 0
+	data:  data$Star.rating and as.numeric(as.factor(data$Author.name))
+	W = 460, p-value < 2.2e-16
+	alternative hypothesis: true location shift is not equal to 0
 
-> wilcox.test(data$Star.rating, as.numeric(as.factor(data$Publisher)))
+	> wilcox.test(data$Star.rating, as.numeric(as.factor(data$Publisher)))
 
-	Wilcoxon rank sum test with continuity correction
+		Wilcoxon rank sum test with continuity correction
 
-data:  data$Star.rating and as.numeric(as.factor(data$Publisher))
-W = 1886, p-value = 1.343e-14
-alternative hypothesis: true location shift is not equal to 0
+	data:  data$Star.rating and as.numeric(as.factor(data$Publisher))
+	W = 1886, p-value = 1.343e-14
+	alternative hypothesis: true location shift is not equal to 0
 
-> 
-> 
-> # Wilcoxon test also confirming significance of  Length column
+
+	> # Wilcoxon test also confirming significance of  Length column
+	> # confirming significant level of Author name and some effect of Publisher, but this is Nonparametric test and I would not rely on it without the other testing.
