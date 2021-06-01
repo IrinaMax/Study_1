@@ -26,7 +26,9 @@
       $ Number.of.reviews: int  64 139 369 9 1 11 25 218 235 57 ...
       $ Length           : int  333 418 224 122 52 231 256 338 384 496 ...
       $ Publisher        : chr  "Amazon " "Delacorte" "Inkitt" "Amazon " ...
-     > plot(data)
+     > pairs.panels(data)
+  ![Screen Shot 2021-05-31 at 11 36 31 PM](https://user-images.githubusercontent.com/16123495/120277629-256a2500-c269-11eb-9636-2aae6be7edfb.png)   
+     
      > hist(data$Star.rating)
   ![H_raiting](https://user-images.githubusercontent.com/16123495/120145791-f3898d80-c198-11eb-8c75-72a288e31660.png)
   
