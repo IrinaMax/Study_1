@@ -307,7 +307,7 @@
  "Delacorte",  "HarperCollins Publishers", "Amazon ", "Dreamscape Publishing" and "Philomel Books",
  and there is some influence to get better rating but to work with Publisher have still very low hypothesis of success.
  
-	 # the  publisher dencity
+	 # the  publisher density visualisation
 	data1 %>% ggplot(aes(x=as.factor(Star.rating), fill = as.factor(Publisher))) +
   		geom_density(alpha=0.8, color= 'black') +
  		 ggtitle("Density Plot")
