@@ -5,8 +5,7 @@
      library(tidytext)
      library(syuzhet)
      library(stringr)
-     library(tidytext)![Uploading Screen Shot 2021-06-01 at 12.57.23 PM.png…]()
-
+     library(tidytext)
 Let's take sentence from Wikipedia about data science and try to highlite some words.
 
      text <-  "Data science is an interdisciplinary field that uses scientific methods, processes, 
