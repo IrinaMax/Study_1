@@ -33,20 +33,49 @@ My idea is create array of some specific words and assign every word to the part
       text <-  "Good old-fashioned buy-and-hold investing might not be exciting enough to interest day traders. But it can nevertheless produce exciting longer-term       returns and beat out newfangled strategies."
       tokens <-  data.frame(text) %>% unnest_tokens(word, text)
       tokens
+               word
+         1      good
+         2       old
+         3 fashioned
+         4       buy
+         5       and
+         6      hold
+      # I will pull Lexicon afinn   
       af<- get_sentiments('afinn')
       af %>% summary
+            word               value        
+     Length:2477        Min.   :-5.0000  
+     Class :character   1st Qu.:-2.0000  
+     Mode  :character   Median :-2.0000  
+                    Mean   :-0.5894  
+                    3rd Qu.: 2.0000  
+                    Max.   : 5.0000  
 
      #bn<- get_sentiments('bing')   # can be the other lexicon used as well
      #bn %>% summary
+     
+     # Pull all common words for the text and Lexicon
      com_words <-tokens %>% inner_join(af)
      com_words
+     >Joining, by = "word"
+     
      df <- data.frame(
         feature = com_words$word,
         bg_colour = palette("default"),
         stringsAsFactors = FALSE
       )
      df
-     #dict <- data.frame(com_w$word, bg_colour = c("pink", "yellow"),stringsAsFactors = FALSE)
+   feature bg_colour
+1     good     black
+2 exciting   #DF536B
+3 interest   #61D04F
+4 exciting   #2297E6
+5     good   #28E2E5
+6 exciting   #CD0BBC
+7 interest   #F5C710
+8 exciting    gray62
+    
+    # retrive words from dictionaly and text with coloring background by pallete color from -5 to 5 base on the sentiment score as priority
       dict1 <- as_dict(df)
       highlight(text,dict1)
 
