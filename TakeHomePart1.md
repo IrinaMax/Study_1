@@ -81,7 +81,9 @@
                    
                    
                    
-     > plot(data1)
+     > pairs.panels(data1)
+   ![Screen Shot 2021-05-31 at 11 39 21 PM](https://user-images.githubusercontent.com/16123495/120277967-93165100-c269-11eb-9a75-4b1b48944360.png)
+   
      > hist(data1$Star.rating)
      > hist(data1$Number.of.reviews)
      > hist(data1$Length)
