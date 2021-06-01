@@ -41,6 +41,19 @@
      > hist(as.numeric(as.factor(data$Publisher)))
   ![H-Publisher](https://user-images.githubusercontent.com/16123495/120146023-4e22e980-c199-11eb-8dc9-e7d722d8d9f8.png)   
      
+    	 data %>%
+ 		 ggplot(aes(x=as.factor(Star.rating), y=Number.of.reviews, fill = as.factor(Star.rating))) +
+ 		 geom_boxplot() +
+ 		 ggtitle("Box Plot")
+		 
+![Screen Shot 2021-06-01 at 12 17 05 AM](https://user-images.githubusercontent.com/16123495/120282193-b68fca80-c26e-11eb-8cae-f1a7a7d08aca.png)
+
+	data %>% ggplot(aes(x=as.factor(Star.rating), fill = as.factor(Star.rating))) +
+ 		 geom_density(alpha=0.8, color= 'black') +
+  		ggtitle("Density Plot")
+		
+![Screen Shot 2021-06-01 at 12 18 14 AM](https://user-images.githubusercontent.com/16123495/120282367-dde69780-c26e-11eb-8b07-96e67d66af9b.png)		
+
      > # I will take subset of only successful authors
      > data1 <-  data %>%  filter(data$Star.rating >= '4.5' & data$Number.of.reviews >=100)
      > data1 %>% head(10)
@@ -293,3 +306,11 @@
  The top 5 of Publishers for successful authors are 
  "Delacorte", "Amazon ", "Dreamscape Publishing", "HarperCollins Publishers" and "Philomel Books",
  and there is some influence to get better rating but to work with Publisher have still very low hypothesis of success.
+ 
+	 # the  publisher dencity
+	data1 %>% ggplot(aes(x=as.factor(Star.rating), fill = as.factor(Publisher))) +
+  		geom_density(alpha=0.8, color= 'black') +
+ 		 ggtitle("Density Plot")
+		 
+![Screen Shot 2021-06-01 at 12 20 06 AM](https://user-images.githubusercontent.com/16123495/120282768-58171c00-c26f-11eb-971e-f5120bfa4b1e.png)
+		 
