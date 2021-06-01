@@ -20,6 +20,7 @@ My idea is create array of some specific words and assign every word to the part
           stringsAsFactors = FALSE
      ) 
  Convert df to dictionary with defined color palette
+ 
      # 
      dict <- as_dict(df)
 
