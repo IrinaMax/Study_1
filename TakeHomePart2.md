@@ -65,15 +65,15 @@ My idea is create array of some specific words and assign every word to the part
         stringsAsFactors = FALSE
       )
      df
-   feature bg_colour
-1     good     black
-2 exciting   #DF536B
-3 interest   #61D04F
-4 exciting   #2297E6
-5     good   #28E2E5
-6 exciting   #CD0BBC
-7 interest   #F5C710
-8 exciting    gray62
+       feature bg_colour
+				1     good     black
+    2 exciting   #DF536B
+    3 interest   #61D04F
+    4 exciting   #2297E6
+    5     good   #28E2E5
+    6 exciting   #CD0BBC
+    7 interest   #F5C710
+    8 exciting    gray62
     
     # retrive words from dictionaly and text with coloring background by pallete color from -5 to 5 base on the sentiment score as priority
       dict1 <- as_dict(df)
