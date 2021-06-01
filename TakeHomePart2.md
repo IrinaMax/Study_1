@@ -5,7 +5,8 @@
      library(tidytext)
      library(syuzhet)
      library(stringr)
-     library(tidytext)
+     library(tidytext)![Uploading Screen Shot 2021-06-01 at 12.57.23 PM.png…]()
+
 Let's take sentence from Wikipedia about data science and try to highlite some words.
 
      text <-  "Data science is an interdisciplinary field that uses scientific methods, processes, 
@@ -21,10 +22,18 @@ My idea is create array of some specific words and assign every word to the part
      ) 
  Convert df to dictionary with defined color palette
  
-     # 
      dict <- as_dict(df)
+     > dict
+        # A tibble: 5 x 6
+          feature                       bg_colour  txt_colour bold  italic strike_out
+         <chr>                         <chr>      <chr>      <lgl> <lgl>  <lgl>     
+        1 "data"                        pink       ""         FALSE FALSE  FALSE     
+        2 "scientific methods"          yellow     ""         FALSE FALSE  FALSE     
+        3 "structured and unstructured" lightblue  ""         FALSE FALSE  FALSE     
+        4 "actionable insights"         lightgreen ""         FALSE FALSE  FALSE     
+        5 " processes"                  gray       ""         FALSE FALSE  FALSE     
 
-# Combine the text and dictionary
+# Combine the text and dictionary with highlighting backgraound words
       highlight(text, dict)
 ![Screen Shot 2021-05-30 at 11 10 29 PM](https://user-images.githubusercontent.com/16123495/120147971-5f212a00-c19c-11eb-83eb-2a05085bb804.png)
 
