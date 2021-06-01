@@ -83,7 +83,8 @@ My idea is create array of some specific words and assign every word to the part
     7 interest   #F5C710
     8 exciting    gray62
     
-    # retrive words from dictionaly and text with coloring background by pallete color from -5 to 5 base on the sentiment score as priority
+    # retrieve words from dictionary and text with coloring background by palette color from -5 to 5 base on the sentiment score as priority
+
       dict1 <- as_dict(df)
       highlight(text,dict1)
 
