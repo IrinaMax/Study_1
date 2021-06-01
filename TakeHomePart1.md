@@ -255,7 +255,7 @@
 	> # Wilcoxon test also confirming significance of  Length column
 	> # confirming significant level of Author name and some effect of Publisher, but this is Nonparametric test and I would not rely on it without the other testing.
 
-# Exemining Publishers for impact of success:
+# Examining Publishers for impact of success:
 
      data1 %>% group_by(data1$Publisher) %>% count()
      # A tibble: 19 x 2
