@@ -1,4 +1,5 @@
-# This is the part one of Take home work. Fun to work with Young Authors data :)
+# work with Young Authors data 
+
       > library(dplyr)
       > # Data is 2016_YA_books.csv
       > data <- read.csv(file.choose(), header = T)
