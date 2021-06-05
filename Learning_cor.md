@@ -1,4 +1,4 @@
-# work with Young Authors data 
+# Work with Young Authors data 
 
       > library(dplyr)
       > # Data is 2016_YA_books.csv
