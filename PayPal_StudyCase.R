@@ -1,5 +1,5 @@
 > # This script PayPal study case, using two data sets provided pp_cust_data.csv and subscriber_data_sample.csv
-> # Author Irina Max. Principal Data Scientist
+> # Author Irina Max. Principal Data Scientist https://rpubs.com/irinamax10/786143
 > library(dplyr)
 > library(corrplot)
 > library(ggplot2)
