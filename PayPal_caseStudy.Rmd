@@ -1,0 +1,50 @@
+---
+title: "Untitled"
+author: "Irina"
+date: "6/27/2021"
+output: html_document
+---
+
+```{r }
+library(dplyr)
+library(corrplot)
+setwd('/Users/irinamax/Documents/R/Experiments/vendor_case_study_updated/')
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+pp <- read.csv('/Users/irinamax/Documents/R/Experiments/vendor_case_study_updated/pp_cust_data.csv')
+pp %>% head
+pp %>% dim       # Data has 2172 rows and 3 col
+pp %>% str       # active_send and active_receive has binary structure
+pp %>% summary   # but different mean, where we can see senders more active
+sum(is.na(pp))   # not missing value
+
+#How many active users in PP list who buying and selling
+pp_a<- pp %>%  filter((active_send %in% 1), (active_receive %in% 1))
+pp_a %>% head(10)
+pp_a %>% dim  ##  here is 832  active used in the PP list
+
+# How many not active?
+pp_ch<- pp %>%  filter((active_send %in% 0), (active_receive %in% 0))
+pp_ch %>% head(10)
+pp_ch %>% dim   # 254 unactive users, or I would call them churned
+
+# ratio in PP list is 254/832 = 0.3052885
+paste("Ratio of Churn users in pp table during last year: ", length( pp_ch[,1])/length(pp_a[,1]))
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
