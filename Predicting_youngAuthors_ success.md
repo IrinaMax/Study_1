@@ -1,4 +1,4 @@
-# Will the small Young Authors data can show you any predictibal value
+# Will the small Young Authors data can show you any predictibale value
 
       > library(dplyr)
       > # Data is 2016_YA_books.csv
